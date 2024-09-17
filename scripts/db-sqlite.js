@@ -33,6 +33,5 @@ const storeUsersCreate = query('CREATE TABLE IF NOT EXISTS `storeUsers` (\n' +
 );
 
 Promise.all([usersCreate, storesCreate, storeUsersCreate]).then(() => {
-  console.log('Database created');
   db.close();
 });
