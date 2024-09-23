@@ -1,37 +1,44 @@
-import { Box, Flex, H1, H4, Panel } from '@bigcommerce/big-design';
-import styled from 'styled-components';
-import ErrorMessage from '../components/error';
-import Loading from '../components/loading';
-import { useProducts } from '../lib/hooks';
+import { Box } from '@bigcommerce/big-design';
+import PublicSquareSettings from '../components/PublicSquareSettings';
+import { useSession } from '../context/session';
 
-const Index = () => {
-    const { error, isLoading, summary } = useProducts();
+const IndexPage: React.FC = () => {
+    const { context } = useSession();
 
-    if (isLoading) return <Loading />;
-    if (error) return <ErrorMessage error={error} />;
+    const handleSavePublicSquareSettings = async (apiKey: string, toggleState: boolean) => {
+        try {
+            const response = await fetch(`/api/settings?context=${context}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    apiKey,
+                    toggleState,
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to save settings');
+            }
+
+            // Handle successful save (e.g., show a success message)
+            console.log('Settings saved successfully');
+        } catch (error) {
+            console.error('Error saving settings:', error);
+            // Handle error (e.g., show an error message to the user)
+        }
+    };
 
     return (
-        <Panel header="Homepage" id="home">
-            <Flex>
-                <StyledBox border="box" borderRadius="normal" marginRight="xLarge" padding="medium">
-                    <H4>Inventory count</H4>
-                    <H1 marginBottom="none">{summary.inventory_count}</H1>
-                </StyledBox>
-                <StyledBox border="box" borderRadius="normal" marginRight="xLarge" padding="medium">
-                    <H4>Variant count</H4>
-                    <H1 marginBottom="none">{summary.variant_count}</H1>
-                </StyledBox>
-                <StyledBox border="box" borderRadius="normal" padding="medium">
-                    <H4>Primary category</H4>
-                    <H1 marginBottom="none">{summary.primary_category_name}</H1>
-                </StyledBox>
-            </Flex>
-        </Panel>
+        <Box padding="medium">
+            <PublicSquareSettings
+                initialApiKey=""
+                initialToggleState={false}
+                onSave={handleSavePublicSquareSettings}
+            />
+        </Box>
     );
 };
 
-const StyledBox = styled(Box)`
-    min-width: 10rem;
-`;
-
-export default Index;
+export default IndexPage;

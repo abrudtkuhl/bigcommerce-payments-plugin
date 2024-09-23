@@ -18,4 +18,15 @@ switch (DB_TYPE) {
         break;
 }
 
+interface Db {
+  hasStoreUser(storeHash: string, userId: string): Promise<boolean> | boolean;
+  setUser(session: SessionProps): Promise<void>;
+  setStore(session: SessionProps): Promise<void>;
+  setStoreUser(session: SessionProps): Promise<void>;
+  getStoreToken(storeId: string): Promise<string> | null;
+  deleteStore(session: SessionProps): Promise<void>;
+  deleteUser(session: SessionProps): Promise<void>;
+  savePublicSquareSettings(storeHash: string, apiKey: string, toggleState: boolean): Promise<void>;
+}
+
 export default db;

@@ -43,6 +43,16 @@ const storeUsersCreate = query('CREATE TABLE `storeUsers` (\n' +
     ') ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;\n'
 );
 
-Promise.all([usersCreate, storesCreate]).then(() => {
+const publicSquareSettingsCreate = query('CREATE TABLE `publicSquareSettings` (\n' +
+    '  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,\n' +
+    '  `storeHash` varchar(10) NOT NULL,\n' +
+    '  `apiKey` text NOT NULL,\n' +
+    '  `toggleState` boolean NOT NULL,\n' +
+    '  PRIMARY KEY (`id`),\n' +
+    '  UNIQUE KEY `storeHash` (`storeHash`)\n' +
+    ') ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;'
+);
+
+Promise.all([usersCreate, storesCreate, storeUsersCreate, publicSquareSettingsCreate]).then(() => {
     connection.end();
 });
